@@ -9,3 +9,4 @@ Scripts/*
 !README.md
 !profile.ps1
 !bin/**
+!utils/**
