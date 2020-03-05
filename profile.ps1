@@ -1,3 +1,11 @@
+# profile
+$profilePath = Join-Path $HOME "Documents\PowerShell\profile.ps1"
+$profileDir = Join-Path $HOME "Documents\PowerShell"
+$env:profile = $profilePath
+$profile = $profilePath
+
+function Edit-Profile { code $profileDir }
+
 Import-Module posh-git
 Import-Module oh-my-posh
 
@@ -17,13 +25,7 @@ function Add-Path($newPath) {
 $bins = @(
   "$env:USERPROFILE\bin"
   "$env:USERPROFILE\.local\bin"
+  "$profileDir\bin"
 ) -join ";"
 
 Add-Path $bins
-
-# profile
-$profilePath = Join-Path $HOME "Documents\PowerShell\profile.ps1"
-$env:profile = $profilePath
-$profile = $profilePath
-
-function Edit-Profile { code $profilePath }
