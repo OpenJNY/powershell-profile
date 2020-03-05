@@ -21,19 +21,11 @@ Set-Theme Agnoster
 # https://news.ycombinator.com/item?id=12991690
 $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 
-function which ($name) { Get-Command -Name $name | Format-List * }
-function open ($filename) { Start-Process $filename }
-function repo () { cd $(Join-Path $(ghq root) $(ghq list | fzf).Replace('/', '\')) }
-
-function settings { Start-Process ms-setttings: }
-
-# rm alternative
-Set-Alias trash Remove-ItemSafely
-
 function Add-Path($newPath) {
   $env:PATH = $newPath + ';' + $env:PATH
 }
 
+# User bins
 $bins = @(
   "$env:USERPROFILE\bin"
   "$env:USERPROFILE\.local\bin"
@@ -42,5 +34,31 @@ $bins = @(
 
 Add-Path $bins
 
+# https://www.powershellgallery.com/packages/ProductivityTools.PSTestCommandExists/1.0.3
+function Test-CommandExists {
+    [CmdletBinding()]
+    param($Name)
+
+    $oldPreference = $ErrorActionPreference
+    Write-Verbose "Previous ErrorActionPreference: $ErrorActionPreference"
+    $ErrorActionPreference = "Stop"
+    Write-Verbose "Set ErrorActionPreference to 'Stop'"
+
+    try {
+        $command=Get-Command $Name
+        Write-Verbose "Command Exists $command"
+        return $true
+    }
+    catch {
+        Write-Verbose "Command $Name does not exist" 
+        return $false
+    }
+    finally {
+        $ErrorActionPreference=$oldPreference
+        Write-Verbose "Restore ErrorActionPreference: $ErrorActionPreference"
+    }
+}
+Set-Alias test Test-CommandExists
+
 # Utils
-Get-ChildItem utils/*.ps1 | ForEach-Object { . $_.FullName }
+Get-ChildItem $PSScriptRoot\utils\*.ps1 | ForEach-Object { . $_.FullName }
