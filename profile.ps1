@@ -6,7 +6,7 @@ $profile = $profilePath
 
 function Edit-Profile { code $profileDir }
 function Update-Profile {
-  & $profilePath
+  . $profilePath
 }
 
 Import-Module posh-git
@@ -36,29 +36,36 @@ Add-Path $bins
 
 # https://www.powershellgallery.com/packages/ProductivityTools.PSTestCommandExists/1.0.3
 function Test-CommandExists {
-    [CmdletBinding()]
-    param($Name)
+  [CmdletBinding()]
+  param($Name)
 
-    $oldPreference = $ErrorActionPreference
-    Write-Verbose "Previous ErrorActionPreference: $ErrorActionPreference"
-    $ErrorActionPreference = "Stop"
-    Write-Verbose "Set ErrorActionPreference to 'Stop'"
+  $oldPreference = $ErrorActionPreference
+  Write-Verbose "Previous ErrorActionPreference: $ErrorActionPreference"
+  $ErrorActionPreference = "Stop"
+  Write-Verbose "Set ErrorActionPreference to 'Stop'"
 
-    try {
-        $command=Get-Command $Name
-        Write-Verbose "Command Exists $command"
-        return $true
-    }
-    catch {
-        Write-Verbose "Command $Name does not exist" 
-        return $false
-    }
-    finally {
-        $ErrorActionPreference=$oldPreference
-        Write-Verbose "Restore ErrorActionPreference: $ErrorActionPreference"
-    }
+  try {
+    $command = Get-Command $Name
+    Write-Verbose "Command Exists $command"
+    return $true
+  }
+  catch {
+    Write-Verbose "Command $Name does not exist" 
+    return $false
+  }
+  finally {
+    $ErrorActionPreference = $oldPreference
+    Write-Verbose "Restore ErrorActionPreference: $ErrorActionPreference"
+  }
 }
 Set-Alias test Test-CommandExists
 
 # Utils
 Get-ChildItem $PSScriptRoot\utils\*.ps1 | ForEach-Object { . $_.FullName }
+
+# Local settings
+$localProfilePath = "$PSScriptRoot\profile.local.ps1"
+if (Test-Path $localProfilePath) {
+  echo "load $localProfilePath"
+  . $localProfilePath
+}
