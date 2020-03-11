@@ -9,14 +9,6 @@ function Update-Profile {
   . $profilePath
 }
 
-Import-Module posh-git
-Import-Module oh-my-posh
-
-# Start the default settings
-# Set-Prompt
-# Alternatively set the desired theme:
-Set-Theme Agnoster
-
 # Produce UTF-8 by default
 # https://news.ycombinator.com/item?id=12991690
 $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
@@ -66,6 +58,20 @@ Get-ChildItem $PSScriptRoot\utils\*.ps1 | ForEach-Object { . $_.FullName }
 # Local settings
 $localProfilePath = "$PSScriptRoot\profile.local.ps1"
 if (Test-Path $localProfilePath) {
-  echo "load $localProfilePath"
   . $localProfilePath
+}
+
+# prompt
+# ------
+if (Test-CommandExists starship) {
+  Invoke-Expression (&starship init powershell)
+} 
+else {
+  Import-Module posh-git
+  Import-Module oh-my-posh
+
+  # Start the default settings
+  # Set-Prompt
+  # Alternatively set the desired theme:
+  Set-Theme Agnoster
 }
