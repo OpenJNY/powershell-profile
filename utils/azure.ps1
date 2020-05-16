@@ -8,6 +8,12 @@ function Select-MyAzSubscription {
     }
 }
 
+function az-select-subscription {
+    if ((test fzf) && (test fq)) {
+        az account list | jq '.[] | {name: .name, id: .id}' -c | fzf | jq -r '.id' | % { az account set -s $_ }
+    }
+}
+
 Set-Alias azsub Select-MyAzSubscription
 Set-Alias azlogin Login-AzAccount
 Set-Alias azexit Logout-AzAccount
