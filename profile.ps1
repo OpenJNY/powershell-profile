@@ -75,3 +75,7 @@ else {
   # Alternatively set the desired theme:
   Set-Theme Agnoster
 }
+
+Import-Module PSReadLine
+Set-PSReadLineOption -EditMode Vi
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
