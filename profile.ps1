@@ -79,3 +79,9 @@ else {
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode Vi
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+
+if (Get-Module -ListAvailable -Name PSFzf) {
+  Remove-PSReadlineKeyHandler 'Ctrl+r'
+  Remove-PSReadlineKeyHandler 'Ctrl+t'
+  Import-Module PSFzf
+}
